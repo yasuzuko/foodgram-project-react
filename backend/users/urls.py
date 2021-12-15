@@ -1,15 +1,8 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
 # from rest_framework.authtoken import views
 from djoser.views import TokenCreateView, TokenDestroyView
 
-
 from .views import FollowApiView, ListFollowViewSet
-
-
-# router = DefaultRouter()
-#
-# router.register('users', UserViewSet)
 
 urlpatterns = [
     # подписки
