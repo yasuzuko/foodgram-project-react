@@ -10,10 +10,9 @@ from .mixins import RetriveAndListViewSet
 from .models import Favorite, Ingredient, Recipe, ShoppingList, Tag
 from .paginators import CustomPageNumberPaginator
 from .permissions import IsAuthorOrAdmin
-from .serializers import (
-    AddRecipeSerializer, FavouriteSerializer, IngredientSerializer,
-    ShoppingListSerializer, ShowRecipeFullSerializer, TagSerializer,
-)
+from .serializers import (AddRecipeSerializer, FavouriteSerializer,
+                          IngredientSerializer, ShoppingListSerializer,
+                          ShowRecipeFullSerializer, TagSerializer)
 
 
 class IngredientViewSet(RetriveAndListViewSet):
