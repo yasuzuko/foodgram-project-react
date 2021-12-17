@@ -3,8 +3,8 @@ from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
-from users.serializers import CustomUserSerializer
 
+from users.serializers import CustomUserSerializer
 from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingList, Tag)
 
@@ -12,7 +12,7 @@ User = get_user_model()
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """ сериалайзер ингридиентов """
+    """ сериалайзер ингредиентов """
     class Meta:
         model = Ingredient
         fields = (
@@ -35,7 +35,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class ShowRecipeIngredientSerializer(serializers.ModelSerializer):
-    """ сериалайзер для отображения списка ингридиентов с количеством """
+    """ сериалайзер для отображения списка ингредиентов с количеством """
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -107,7 +107,7 @@ class ShowRecipeFullSerializer(serializers.ModelSerializer):
 
 
 class AddRecipeIngredientSerializer(serializers.ModelSerializer):
-    """ сериалайзер для добавления ингридиента и количества в рецепт """
+    """ сериалайзер для добавления ингредиента и количества в рецепт """
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
 
@@ -143,14 +143,14 @@ class AddRecipeSerializer(serializers.ModelSerializer):
     def validate_ingredients(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise ValidationError('Добавьте ингридиент')
+            raise ValidationError('Добавьте ингредиент')
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
                 raise ValidationError('Не может быть отрицательным')
         ingredients_count = len(ingredients)
         ingredients_set = len(set([i['id'] for i in ingredients]))
         if ingredients_count > ingredients_set:
-            raise ValidationError('Ингридиенты повторяются')
+            raise ValidationError('Ингредиенты повторяются')
         return data
 
     def validate_tags(self, data):
@@ -190,11 +190,6 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
-        recipe.name = validated_data.get('name', recipe.name)
-        recipe.text = validated_data.get('text', recipe.text)
-        recipe.cooking_time = validated_data.get('cooking_time',
-                                                 recipe.cooking_time)
-        recipe.image = validated_data.get('image', recipe.image)
         if 'ingredients' in self.initial_data:
             ingredients = validated_data.pop('ingredients')
             recipe.ingredients.clear()
@@ -202,7 +197,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         if 'tags' in self.initial_data:
             tags_data = validated_data.pop('tags')
             recipe.tags.set(tags_data)
-        recipe.save()
+        super().update(recipe, validated_data)
         return recipe
 
     def to_representation(self, recipe):
