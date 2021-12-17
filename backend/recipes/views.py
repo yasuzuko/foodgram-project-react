@@ -7,7 +7,9 @@ from rest_framework.response import Response
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveAndListViewSet
-from .models import Favorite, Ingredient, Recipe, ShoppingList, Tag
+from .models import (
+    Favorite, Ingredient, Recipe, ShoppingList, Tag, RecipeIngredient
+    )
 from .paginators import CustomPageNumberPaginator
 from .permissions import IsAuthorOrAdmin
 from .serializers import (AddRecipeSerializer, FavouriteSerializer,
@@ -84,28 +86,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
-        ingredients = request.user.shopping_list.all().values_list(
-            'recipe__ingredients__name',
-            'recipe__ingredients__recipeingredient__amount',
-            'recipe__ingredients__measurement_unit')
-        shopping_list = {}
-        for ingredient in ingredients:
-            name = ingredient[0]
-            amount = ingredient[1]
-            measurement_unit = ingredient[2]
-            if name not in shopping_list:
-                shopping_list[name] = {
-                    'measurement_unit': measurement_unit,
-                    'amount': amount
-                }
-            else:
-                shopping_list[name]['amount'] += amount
-        shopping_cart = []
-        for item in shopping_list:
-            shopping_cart.append(
-                f'{item} - '
-                f'{shopping_list[item]["amount"]} '
-                f'{shopping_list[item]["measurement_unit"]} \n')
-        response = HttpResponse(shopping_cart, 'Content-Type: text/plain')
+        user = request.user
+        shopping_list = RecipeIngredient.objects.filter(
+            recipe__shopping_cart__user=user).values(
+                'ingredient__name',
+                'ingredient__measurement_unit'
+            ).annotate(amount=sum('amount'))
+        response = HttpResponse(shopping_list, 'Content-Type: text/plain')
         response['Content-Disposition'] = 'attachment; filename=purchase.txt'
         return response
+
+# def download_shopping_cart(self, request):
+#         user = request.user
+#         shopping_list = IngredientAmount.objects.filter(
+#         recipe__carts__user=user).values(
+#             'ingredient__name',
+#             'ingredient__measurement_unit'
+#         ).annotate(amount=sum('amount'))
+#         my_file = open("Shopping_list.txt", "w+")
+#         my_file.write(shopping_list)
+#         return FileResponse(my_file)
