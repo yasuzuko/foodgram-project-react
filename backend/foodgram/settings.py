@@ -70,16 +70,8 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD', default='foodgram'),
         'HOST': os.getenv('DB_HOST', default='localhost'),
         'PORT': int(os.getenv('DB_PORT', default=5432)),
-        # 'ATOMIC_REQUESTS': True,
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -144,20 +136,9 @@ DJOSER = {
     'USER_ID_FIELD': 'id',
     'SEND_ACTIVATION_EMAIL': False,
     'PERMISSIONS': {
-        # 'activation': ['rest_framework.permissions.AllowAny'],
-        # 'password_reset': ['rest_framework.permissions.AllowAny'],
-        # 'password_reset_confirm': ['rest_framework.permissions.AllowAny'],
-        # 'set_password': ['djoser.permissions.CurrentUserOrAdmin'],
-        # 'username_reset': ['rest_framework.permissions.AllowAny'],
-        # 'username_reset_confirm': ['rest_framework.permissions.AllowAny'],
-        # 'set_username': ['djoser.permissions.CurrentUserOrAdmin'],
         'user_create': ['rest_framework.permissions.AllowAny'],
-        # 'user_delete': ['djoser.permissions.CurrentUserOrAdmin'],
         'user': ['rest_framework.permissions.IsAuthenticated'],
         'user_list': ['rest_framework.permissions.AllowAny'],
-        # 'token_create': ['rest_framework.permissions.AllowAny'],
-        # 'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
-        #
     }
 
 }

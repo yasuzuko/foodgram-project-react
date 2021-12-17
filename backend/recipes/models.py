@@ -126,8 +126,6 @@ class RecipeTag(models.Model):
 
     class Meta:
         verbose_name = 'Теги'
-        # constraints = [models.UniqueConstraint(
-        #     fields=['recipe', 'tag'], name='unique_tag')]
 
     def __str__(self):
         return 'Тег'
