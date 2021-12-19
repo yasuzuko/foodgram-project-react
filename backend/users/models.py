@@ -35,6 +35,7 @@ class User(AbstractUser):
 
 class Follow(models.Model):
     """ Модель для подписок на авторов """
+    id = models.PositiveIntegerField(primary_key=True)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

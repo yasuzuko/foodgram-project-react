@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -50,6 +51,10 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    pub_date = models.DateTimeField(
+        verbose_name='дата публикации',
+        default=timezone.now,
+    )
     name = models.CharField(
         max_length=200,
         verbose_name='Название',
@@ -92,12 +97,14 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='recipes',
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.PROTECT,
-        verbose_name='Ингредиент'
+        verbose_name='Ингредиент',
+        related_name='ingredients',
     )
     amount = models.PositiveIntegerField(
         validators=[MinValueValidator(1)],

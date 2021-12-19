@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Sum
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -88,21 +89,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def download_shopping_cart(self, request):
         user = request.user
         shopping_list = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=user).values(
+            recipe__in_favorite__user=user).values(
                 'ingredient__name',
-                'ingredient__measurement_unit'
-            ).annotate(amount=sum('amount'))
+                'ingredient__measurement_unit').annotate(amount=Sum('amount'))
         response = HttpResponse(shopping_list, 'Content-Type: text/plain')
         response['Content-Disposition'] = 'attachment; filename=purchase.txt'
         return response
-
-# def download_shopping_cart(self, request):
-#         user = request.user
-#         shopping_list = IngredientAmount.objects.filter(
-#         recipe__carts__user=user).values(
-#             'ingredient__name',
-#             'ingredient__measurement_unit'
-#         ).annotate(amount=sum('amount'))
-#         my_file = open("Shopping_list.txt", "w+")
-#         my_file.write(shopping_list)
-#         return FileResponse(my_file)

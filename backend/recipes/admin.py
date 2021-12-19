@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Favorite, Ingredient, Recipe, RecipeIngredient, RecipeTag,
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingList, Tag)
 
 
@@ -22,17 +22,10 @@ class RecipeIngredientInline(admin.TabularInline):
     min_num = 1
 
 
-class RecipeTagInline(admin.TabularInline):
-    model = RecipeTag
-    min_num = 1
-    extra = 0
-
-
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     inlines = (
         RecipeIngredientInline,
-        RecipeTagInline,
     )
     list_display = ('name', 'text', 'cooking_time')
     search_fields = ('name', 'text', 'ingredients')
