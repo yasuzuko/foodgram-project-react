@@ -1,7 +1,11 @@
 **
 
 !foodgram/
+!media/
 !recipes/
+!templates/
 !users/
 !requirements.txt
 !manage.py
+!.env.template
+!fixtures.json

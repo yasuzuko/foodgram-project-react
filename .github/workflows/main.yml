@@ -28,6 +28,7 @@ jobs:
       name: Push Foodgram-backend Docker image to Docker Hub
       runs-on: ubuntu-latest
       needs: tests
+      if: github.ref == 'refs/heads/master'
       steps:
         - name: Check out the repo
           uses: actions/checkout@v2 
@@ -47,11 +48,36 @@ jobs:
             push: true
             tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
 
+    deploy:
+      runs-on: ubuntu-latest
+      needs: build_and_push_to_docker_hub
+      steps:
+        - name: executing remote ssh commands to deploy
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.SSH_SERVER }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_KEY }}
+            passphrase: ${{ secrets.SSH_PASSPHRASE }}
+            script: |
+              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
+              sudo docker-compose stop
+              sudo docker-compose rm web
+              touch .env 
+              echo DEBUG = False >> .env
+              echo SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
+              echo ALLOWED_HOSTS=${{ secrets.SSH_SERVER }} >> .env
+              echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+              echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+              echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+              echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+              echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+              cd infra
+              sudo docker-compose up -d
 
     send_message:
         runs-on: ubuntu-latest       
-        needs: build_and_push_to_docker_hub
-        # needs: deploy
+        needs: deploy
         steps:
           - name: send message
             uses: appleboy/telegram-action@master
