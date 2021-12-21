@@ -49,9 +49,9 @@ jobs:
 
 
     send_message:
-        runs-on: ubuntu-latest
-#        needs: deploy
-        needs: tests
+        runs-on: ubuntu-latest       
+          needs: build_and_push_to_docker_hub
+        # needs: deploy
         steps:
           - name: send message
             uses: appleboy/telegram-action@master
