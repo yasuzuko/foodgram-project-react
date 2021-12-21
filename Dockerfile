@@ -6,6 +6,7 @@ RUN python3 -m pip install -U pip setuptools wheel
 
 COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
+RUN pip install psycopg2-binary-2.8.6
 
 COPY . .
 
