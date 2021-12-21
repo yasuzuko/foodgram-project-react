@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN python3 -m pip install -U pip
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
