@@ -132,9 +132,3 @@ dmypy.json
 .idea
 
 /backup
-/static
-/backend/static
-/frontend
-/data
-/docs
-/infra
