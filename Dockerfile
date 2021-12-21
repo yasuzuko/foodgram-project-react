@@ -2,7 +2,7 @@ FROM python:3-slim
 
 WORKDIR /app
 
-RUN python3 -m pip install -U pip
+RUN python3 -m pip install -U pip setuptools wheel
 
 COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
