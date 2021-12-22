@@ -13,4 +13,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN ls
+
 CMD gunicorn foodgram.wsgi -b 0.0.0.0:8000
