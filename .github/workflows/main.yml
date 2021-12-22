@@ -76,7 +76,7 @@ jobs:
 
     send_message:
         runs-on: ubuntu-latest       
-        needs: deploy
+        needs: pull_images_and_put_env
         steps:
           - name: send message
             uses: appleboy/telegram-action@master
