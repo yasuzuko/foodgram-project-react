@@ -9,3 +9,4 @@
 !manage.py
 !.env.template
 !fixtures.json
+!docker-compose.yml
