@@ -15,13 +15,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     restart: always
 
-  frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ../frontend/:/app/result_build/
-
   backend:
     image: yasuzuko/foodgram-backend:latest
     restart: always
@@ -32,6 +25,15 @@ services:
       - foodgram_media:/app/media
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:1.19.6
@@ -46,5 +48,4 @@ services:
       - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
     restart: always
     depends_on:
-      - backend
       - frontend
