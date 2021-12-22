@@ -44,8 +44,8 @@ docker-compose up -d
 python manage.py makemigrations
 python manage.py migrate
 python manage.py collectstatic
-python manage.py createsuperuser - добавить администратора Django
 python manage.py load_data - команда загрузит первоначальный список доступных ингредиентов для рецептов в БД
 python manage.py loaddata fixtures.json - команда загрузит тестовый набор данных
+python manage.py createsuperuser - добавить администратора Django
 
 В тестовом режиме проект доступен по адресу http://62.84.112.164
