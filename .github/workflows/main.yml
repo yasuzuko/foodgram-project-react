@@ -61,7 +61,6 @@ jobs:
             key: ${{ secrets.SSH_KEY }}
             passphrase: ${{ secrets.SSH_PASSPHRASE }}
             script: |
-              sudo git clone https://github.com/yasuzuko/foodgram-project-react.git
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
               touch .env 
