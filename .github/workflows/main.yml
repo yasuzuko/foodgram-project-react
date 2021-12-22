@@ -65,9 +65,8 @@ jobs:
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
               sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
               touch .env 
-              echo DEBUG = False >> .env
+              echo DEBUG=False >> .env
               echo SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
-              echo ALLOWED_HOSTS=${{ secrets.SSH_SERVER }} >> .env
               echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
               echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
               echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
