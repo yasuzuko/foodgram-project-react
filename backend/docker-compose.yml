@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: 
-      - ../backend/.env
+      - .env
     ports:
       - 5432:5432
 
@@ -18,7 +18,7 @@ services:
     image: yasuzuko/foodgram-backend:latest
     restart: unless-stopped
     env_file:
-      - ../backend/.env
+      - .env
     depends_on:
       - db
     volumes:
