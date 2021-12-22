@@ -26,9 +26,8 @@ services:
       - ./media:/app/media:rw
 
   frontend:
-    build:
-      context: ../foodgram-project-react/frontend
-      dockerfile: Dockerfile
+    image: yasuzuko/foodgram-frontend:latest
+    restart: unless-stopped
     volumes:
       - ../foodgram-project-react/frontend/:/app/result_build/
   
