@@ -42,15 +42,17 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = ('user', 'following')
 
     def validate(self, data):
-        user = self.context.get('request').user
-        following_id = data['following'].id
-        if Follow.objects.filter(user=user,
-                                 following__id=following_id).exists():
+        user = data['user']
+        if Follow.objects.filter(
+            user=user,
+            following=data['following']
+            ).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого пользователя')
-        if user.id == following_id:
+        if user.id == data['following'].id:
             raise serializers.ValidationError('Нельзя подписаться на себя')
-        return data
+        else:
+            return data
 
 
 class FollowingRecipesSerializers(serializers.ModelSerializer):

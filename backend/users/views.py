@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 
 from .models import Follow
 from recipes.paginators import CustomPageNumberPaginator
-from .serializers import FollowSerializer, ShowFollowSerializer
+from .serializers import (FollowSerializer, ShowFollowSerializer,
+                         CustomUserSerializer)
 
 User = get_user_model()
 
@@ -17,11 +18,15 @@ class FollowApiView(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def get(self, request, id):
+        user = request.user
         data = {'user': request.user.id, 'following': id}
         serializer = FollowSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        following = get_object_or_404(User, id=id)
+        f_count = Follow.objects.count()+1
+        serializer.save(user=user, following=following, id=f_count)
+        follower = CustomUserSerializer(following)
+        return Response(follower.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
         user = request.user
@@ -31,26 +36,26 @@ class FollowApiView(APIView):
         subscription.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(
-        # methods=["get", "delete"],
-        detail=True,
-        # url_path=r"(?P<id>\d+)/subscribe",
-        permission_classes=[permissions.IsAuthenticated],
-    )
-    def subscribe(self, request, id):
-        print('!!!!!')
-        following = get_object_or_404(User, id=id)
-        print(f'following: {following}')
-        if request.method == "GET":
-            instance = Follow.objects.create(following=following, user=request.user)
-            serializer = FolllowSerializer(
-                following, context={"request": request}
-            )
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        instance = Follow.objects.filter(following=following, user=request.user)
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # @action(
+    #     # methods=["get", "delete"],
+    #     detail=True,
+    #     # url_path=r"(?P<id>\d+)/subscribe",
+    #     permission_classes=[permissions.IsAuthenticated],
+    # )
+    # def subscribe(self, request, id):
+    #     print('!!!!!')
+    #     following = get_object_or_404(User, id=id)
+    #     print(f'user {request.user}, following: {following}')
+    #     if request.method == "GET":
+    #         instance = Follow.objects.create(following=following, user=request.user)
+    #         serializer = FolllowSerializer(
+    #             following, context={"request": request}
+    #         )
+    #         if serializer.is_valid():
+    #             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     instance = Follow.objects.filter(following=following, user=request.user)
+    #     instance.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ListFollowViewSet(generics.ListAPIView):
