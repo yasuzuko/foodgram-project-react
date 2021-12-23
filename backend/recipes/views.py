@@ -86,11 +86,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
+        print('download_shopping_cart')
+        name = 'recipe__ingredients__name'
+        unit = 'recipe__ingredients__measurement_unit'
+        amount = 'recipe__ingredients__ingredients__amount'
         user = request.user
-        shopping_list = RecipeIngredient.objects.filter(
-            recipe__in_favorite__user=user).values(
-                'ingredient__name',
-                'ingredient__measurement_unit').annotate(amount=Sum('amount'))
-        response = HttpResponse(shopping_list, 'Content-Type: text/plain')
-        response['Content-Disposition'] = 'attachment; filename=purchase.txt'
+        shopping_list = ShoppingList.objects.filter(user=user
+        ).order_by(name).values(name, unit).annotate(amount=Sum(amount))
+        text = 'Список покупок:\n\n'
+        for number, item in enumerate(shopping_list, start=1):
+            text += f'{number}) {item[name]} - {item["amount"]} {item[unit]}\n'
+        response = HttpResponse(text, 'Content-Type: text/plain')
+        filename = 'purchase.txt'
+        response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
