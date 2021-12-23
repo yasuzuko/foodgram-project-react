@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret-key-for-django')
 
-DEBUG=False
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']  # Development
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')  # Production

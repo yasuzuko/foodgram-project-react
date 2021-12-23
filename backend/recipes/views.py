@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveAndListViewSet
-from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+from .models import (Favorite, Ingredient, Recipe,
                      ShoppingList, Tag)
 from .paginators import CustomPageNumberPaginator
 from .permissions import IsAuthorOrAdmin
@@ -91,8 +91,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         unit = 'recipe__ingredients__measurement_unit'
         amount = 'recipe__ingredients__ingredients__amount'
         user = request.user
-        shopping_list = ShoppingList.objects.filter(user=user
-        ).order_by(name).values(name, unit).annotate(amount=Sum(amount))
+        shopping_list = ShoppingList.objects.filter(
+            user=user
+            ).order_by(name).values(name, unit).annotate(amount=Sum(amount))
         text = 'Список покупок:\n\n'
         for number, item in enumerate(shopping_list, start=1):
             text += f'{number}) {item[name]} - {item["amount"]} {item[unit]}\n'
