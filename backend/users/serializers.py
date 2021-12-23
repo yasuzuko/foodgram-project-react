@@ -35,7 +35,8 @@ class CustomUserSerializer(UserSerializer):
 class FollowSerializer(serializers.ModelSerializer):
     """ сериалайзер подписок +валидатор """
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    following = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all())
 
     class Meta:
         model = Follow
