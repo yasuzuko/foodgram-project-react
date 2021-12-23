@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.http import FileResponse
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -97,7 +98,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         text = 'Список покупок:\n\n'
         for number, item in enumerate(shopping_list, start=1):
             text += f'{number}) {item[name]} - {item["amount"]} {item[unit]}\n'
-        response = HttpResponse(text, 'Content-Type: text/plain')
-        filename = 'purchase.txt'
-        response['Content-Disposition'] = f'attachment; filename={filename}'
+        shop_list_file = open("purchase.txt", "w+")
+        shop_list_file.write(text)
+        response = FileResponse(text)
         return response
